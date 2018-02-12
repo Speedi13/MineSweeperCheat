@@ -1,6 +1,9 @@
 # MineSweeperCheat
 Minesweeper external cheat
 
+I was lazy so I used the pdb provided by Microsoft for reverse engineering the game,
+
+but the pdb didn't contain any information about the structs / classes except there name
 
 ## Demos
 - Reveal all bombs
