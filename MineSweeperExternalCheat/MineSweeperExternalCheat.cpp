@@ -52,20 +52,20 @@ BYTE IsBomb( HANDLE hProcessHandle, DWORD64 pBoard, POINT FieldPos )
 /// <param name="hProcessHandle">a handle to the games process</param>
 /// <param name="dwBaseAddress">start of the games module</param>
 /// <param name="OutFieldPos">optional output of the current highlited field coordinate</param>
-/// <returns>0 = No bomb | 1 = Bomb | 2 = Error</returns>
+/// <returns>0 = No bomb | 1 = Bomb | 2 = Fatal Error | 3 = temporary Error </returns>
 BYTE BombDetector( HANDLE hProcessHandle, DWORD64 dwBaseAddress, POINT* OutFieldPos = NULL )
 {
 	DWORD64 GameClass = ReadProcMem<DWORD64,DWORD64>( hProcessHandle, dwBaseAddress + OFFSET_GameClass );
 	if ( !IsValidPointer( GameClass ) ) return 2;
 
 	DWORD64 pUIBoardCanvas = ReadProcMem<DWORD64,DWORD64>( hProcessHandle, GameClass + 0x10 );
-	if ( !IsValidPointer( pUIBoardCanvas ) ) return 2;
+	if ( !IsValidPointer( pUIBoardCanvas ) ) return 3;
 
 	DWORD64 pBoard = ReadProcMem<DWORD64,DWORD64>( hProcessHandle, GameClass + 0x18 );
-	if ( !IsValidPointer( pBoard ) ) return 2;
+	if ( !IsValidPointer( pBoard ) ) return 3;
 
 	DWORD64 pUITile_CurrentMouseOver = ReadProcMem<DWORD64,DWORD64>( hProcessHandle, pUIBoardCanvas + 0xF0 );
-	if ( !IsValidPointer( pUITile_CurrentMouseOver ) ) return 2;
+	if ( !IsValidPointer( pUITile_CurrentMouseOver ) ) return 3;
 
 	POINT FieldPos = ReadProcMem<POINT,DWORD64>( hProcessHandle, pUITile_CurrentMouseOver + 0x30 ); //0x0030
 	if ( OutFieldPos != NULL )
